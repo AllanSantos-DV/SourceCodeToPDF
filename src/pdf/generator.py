@@ -4,7 +4,7 @@ from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Spacer, Paragraph
 
-from config.settings import PAGE_SIZE, DEFAULT_FONT_SIZE
+from src.config.settings import PAGE_SIZE, DEFAULT_FONT_SIZE
 
 
 class PDFGenerator:
