@@ -1,6 +1,8 @@
 import os
+
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+
 from src.config.settings import IGNORED_FOLDERS
 from .base_entry import TreeEntryBase
 
@@ -104,29 +106,43 @@ class FolderEntry(TreeEntryBase):
 
     def _toggle_folder_selection(self):
         """Alterna a seleção da pasta e seu conteúdo"""
-        is_selected = self.var.get()
+        is_selected = self.var.get()  # Estado do checkbox da pasta atual
         folder_data = self.folder_contents[self.folder_path]
 
-        # Atualizar arquivos
+        # Atualizar arquivos na pasta atual
         for file_path, _, _ in folder_data['files']:
-            if file_path in self.file_vars:
+            if file_path in self.file_vars:  # Atualiza se o arquivo já foi renderizado
                 self.file_vars[file_path].set(is_selected)
+            else:
+                # Atualiza diretamente no estado armazenado
+                folder_data['files'] = [
+                    (fp, fn, is_selected) if fp == file_path else (fp, fn, sel)
+                    for fp, fn, sel in folder_data['files']
+                ]
 
         # Atualizar subpastas recursivamente
         for subfolder in folder_data['subfolders']:
             full_path = os.path.join(self.project_path, subfolder)
             if full_path in self.file_vars:
-                self.file_vars[full_path].set(is_selected)
-            self._toggle_subfolder_selection(subfolder, is_selected)
+                self.file_vars[full_path].set(is_selected)  # Atualiza se renderizado
+            self._toggle_subfolder_selection(subfolder, is_selected)  # Recursivo
 
     def _toggle_subfolder_selection(self, subfolder, is_selected):
-        """Alterna a seleção de uma subpasta recursivamente"""
+        """Alterna a seleção de uma subpasta e seu conteúdo recursivamente"""
         folder_data = self.folder_contents[subfolder]
 
+        # Atualizar arquivos na subpasta
         for file_path, _, _ in folder_data['files']:
             if file_path in self.file_vars:
                 self.file_vars[file_path].set(is_selected)
+            else:
+                # Atualiza diretamente no estado armazenado
+                folder_data['files'] = [
+                    (fp, fn, is_selected) if fp == file_path else (fp, fn, sel)
+                    for fp, fn, sel in folder_data['files']
+                ]
 
+        # Atualizar subpastas aninhadas
         for sub in folder_data['subfolders']:
             full_path = os.path.join(self.project_path, sub)
             if full_path in self.file_vars:

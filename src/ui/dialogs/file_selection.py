@@ -1,11 +1,10 @@
-import os
 from tkinter import Toplevel
+
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-# Atualizando os imports para a nova estrutura
-from src.ui.components.folder_entry import FolderEntry
 from src.ui.components.file_entry import FileEntry
+from src.ui.components.folder_entry import FolderEntry
 
 
 class FileSelectionDialog:
@@ -17,7 +16,6 @@ class FileSelectionDialog:
     def __init__(self, parent, project_path):
         """
         Inicializa o diálogo de seleção de arquivos.
-
         Args:
             parent: Janela pai
             project_path: Caminho base do projeto
@@ -25,11 +23,12 @@ class FileSelectionDialog:
         self.window = Toplevel(parent)
         self.window.title("Seleção de Arquivos")
         self.window.geometry("600x600")
-
         self.project_path = project_path
-        self.file_vars = {}
-        self.folder_frames = {}
+
+        # Inicializa o atributo folder_contents antes de atribuir file_vars
         self.folder_contents = {}
+        self.file_vars = {'folder_contents': self.folder_contents}
+        self.folder_frames = {}
 
         self._create_ui()
 
@@ -139,15 +138,20 @@ class FileSelectionDialog:
             file_path,
             file_name,
             is_selected,
-            self.file_vars
+            self.file_vars,
+            self.folder_contents
         )
 
     def _confirm_selection(self):
         """Confirma a seleção e fecha o diálogo"""
-        selected_files = [
-            file for file, var in self.file_vars.items()
-            if var.get() == 1 and os.path.isfile(file)
-        ]
+        selected_files = []
+        # Percorre todos os arquivos e pastas armazenados
+        for folder, data in self.folder_contents.items():
+            for file_path, _, is_selected in data['files']:
+                if is_selected:  # Garante que apenas arquivos selecionados sejam incluídos
+                    selected_files.append(file_path)
+
+        # Armazena os arquivos selecionados
         self.window.selected_files = selected_files
         self.window.destroy()
 

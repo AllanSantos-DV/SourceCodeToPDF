@@ -1,5 +1,6 @@
 import os
 from tkinter import IntVar
+
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
@@ -47,15 +48,35 @@ class TreeEntryBase:
             text: Texto a ser exibido no checkbox
             command: Função a ser chamada quando o checkbox for alterado
         """
-        # Criamos um frame para manter os elementos alinhados
         content_frame = ttk.Frame(self.item_frame)
         content_frame.pack(fill=X, side=LEFT, padx=(0, 0))
+
+        def on_toggle():
+            """Sincroniza o estado do checkbox com folder_contents"""
+            is_selected = self.var.get()
+            # Atualiza o estado em folder_contents
+            if os.path.isfile(self.path):
+                # Atualiza arquivo
+                for folder, data in self.file_vars['folder_contents'].items():
+                    for i, (file_path, file_name, selected) in enumerate(data['files']):
+                        if file_path == self.path:
+                            data['files'][i] = (file_path, file_name, is_selected)
+            else:
+                # Atualiza pasta e conteúdo
+                for folder, data in self.file_vars['folder_contents'].items():
+                    if folder == self.path:
+                        data['files'] = [
+                            (fp, fn, is_selected) for fp, fn, _ in data['files']
+                        ]
+
+            if command:
+                command()
 
         checkbox = ttk.Checkbutton(
             content_frame,
             text=text,
             variable=self.var,
             bootstyle="round-toggle",
-            command=command
+            command=on_toggle
         )
         checkbox.pack(side=LEFT)
