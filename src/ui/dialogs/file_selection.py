@@ -1,18 +1,15 @@
 from tkinter import Toplevel
-
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
 from src.ui.components.file_entry import FileEntry
 from src.ui.components.folder_entry import FolderEntry
 
-
 class FileSelectionDialog:
     """
     Diálogo para seleção de arquivos em uma estrutura de árvore.
     Permite navegação e seleção de arquivos e pastas.
     """
-
     def __init__(self, parent, project_path):
         """
         Inicializa o diálogo de seleção de arquivos.
@@ -69,6 +66,7 @@ class FileSelectionDialog:
             window=self.scrollable_frame,
             anchor="nw"
         )
+
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
         # Configuração do mousewheel
@@ -76,6 +74,7 @@ class FileSelectionDialog:
             "<MouseWheel>",
             lambda e: self.canvas.yview_scroll(int(-1 * (e.delta / 120)), "units")
         )
+
         self.window.bind(
             "<Destroy>",
             lambda e: self.canvas.unbind_all("<MouseWheel>")
@@ -94,12 +93,10 @@ class FileSelectionDialog:
     def populate_tree(self, folder_contents):
         """
         Popula a árvore com os arquivos e pastas.
-
         Args:
             folder_contents: Estrutura de dados com o conteúdo das pastas
         """
         self.folder_contents = folder_contents
-
         # Arquivos na raiz
         root_files = self.folder_contents.get('', {'files': []})['files']
         for file_path, file_name, is_selected in root_files:
@@ -115,31 +112,30 @@ class FileSelectionDialog:
             folder for folder, data in self.folder_contents.items()
             if data['parent'] == '' and folder != ''
         }
-
         for folder in sorted(root_folders):
             self._create_folder_entry(folder)
 
     def _create_folder_entry(self, folder):
         """Cria uma entrada de pasta"""
         return FolderEntry(
-            self.scrollable_frame,
-            folder,
-            self.project_path,
-            self.file_vars,
-            self.folder_frames,
-            self.folder_contents,
-            self._create_file_entry
+            parent_frame=self.scrollable_frame,
+            folder_path=folder,
+            project_path=self.project_path,
+            file_vars=self.file_vars,
+            folder_frames=self.folder_frames,
+            folder_contents=self.folder_contents,
+            create_file_entry=self._create_file_entry
         )
 
     def _create_file_entry(self, file_path, file_name, is_selected, parent_frame):
         """Cria uma entrada de arquivo"""
         return FileEntry(
-            parent_frame,
-            file_path,
-            file_name,
-            is_selected,
-            self.file_vars,
-            self.folder_contents
+            parent_frame=parent_frame,
+            file_path=file_path,
+            file_name=file_name,
+            is_selected=is_selected,
+            file_vars=self.file_vars,
+            folder_contents=self.folder_contents
         )
 
     def _confirm_selection(self):
