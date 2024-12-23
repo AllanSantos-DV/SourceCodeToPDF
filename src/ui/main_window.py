@@ -1,6 +1,10 @@
 import os
 from tkinter import filedialog, messagebox
+from tkinter.simpledialog import askstring
+from tkinter.ttk import Label, Button
+
 import ttkbootstrap as ttk
+from ttkbootstrap import Toplevel
 from ttkbootstrap.constants import *
 
 from src.core.file_manager import FileManager
@@ -100,8 +104,51 @@ class MainWindow:
         dialog.populate_tree(self._organize_files(files))
         self.selected_files = dialog.get_selected_files()
 
-    def generate_pdf(self):
-        """Gerencia a geração do PDF com os arquivos selecionados"""
+    # def generate_pdf(self):
+    #     """Gerencia a geração do PDF com os arquivos selecionados"""
+    #     if not self.selected_files:
+    #         messagebox.showwarning("Aviso", "Nenhum arquivo selecionado para geração do PDF.")
+    #         return
+    #
+    #     output_path = filedialog.asksaveasfilename(
+    #         defaultextension=".pdf",
+    #         filetypes=[("PDF files", "*.pdf")]
+    #     )
+    #
+    #     if not output_path:
+    #         messagebox.showwarning("Aviso", "Destino não selecionado")
+    #         return
+    #
+    #     pdf_gen = PDFGenerator()
+    #     pdf_gen.generate_pdf(
+    #         self.selected_files,
+    #         output_path,
+    #         self.update_progress
+    #     )
+    #
+    #     messagebox.showinfo("Sucesso", f"PDF gerado em {output_path}")
+    #     self.progress['value'] = 0
+    #     self.root.update_idletasks()
+
+    def show_pdf_format_dialog(self):
+        """Exibe um diálogo para o usuário selecionar o formato do PDF."""
+        dialog = Toplevel(self.root)
+        dialog.title("Escolher Formato do PDF")
+        dialog.geometry("300x150")
+        dialog.resizable(False, False)
+        dialog.grab_set()
+
+        Label(dialog, text="Escolha o formato do PDF:", font=("Helvetica", 12)).pack(pady=10)
+
+        def select_format(format_option):
+            dialog.destroy()
+            self._generate_pdf_with_format(format_option)
+
+        Button(dialog, text="Texto Simples", command=lambda: select_format("texto_simples"), width=15).pack(pady=5)
+        Button(dialog, text="Texto Indentado", command=lambda: select_format("texto_indentado"), width=15).pack(pady=5)
+
+    def _generate_pdf_with_format(self, format_option):
+        """Gera o PDF baseado no formato selecionado."""
         if not self.selected_files:
             messagebox.showwarning("Aviso", "Nenhum arquivo selecionado para geração do PDF.")
             return
@@ -110,21 +157,24 @@ class MainWindow:
             defaultextension=".pdf",
             filetypes=[("PDF files", "*.pdf")]
         )
-
         if not output_path:
             messagebox.showwarning("Aviso", "Destino não selecionado")
             return
 
         pdf_gen = PDFGenerator()
-        pdf_gen.generate_pdf(
-            self.selected_files,
-            output_path,
-            self.update_progress
-        )
+
+        if format_option == "texto_simples":
+            pdf_gen.generate_simple_pdf(self.selected_files, self.project_path, output_path, self.update_progress)
+        elif format_option == "texto_indentado":
+            pdf_gen.generate_indented_pdf(self.selected_files, self.project_path, output_path, self.update_progress)
 
         messagebox.showinfo("Sucesso", f"PDF gerado em {output_path}")
         self.progress['value'] = 0
         self.root.update_idletasks()
+
+    def generate_pdf(self):
+        """Gerencia a geração do PDF mostrando o diálogo de seleção de formato."""
+        self.show_pdf_format_dialog()
 
     def update_progress(self, current, total):
         """Atualiza a barra de progresso"""
