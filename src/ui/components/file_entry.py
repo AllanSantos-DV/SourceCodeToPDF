@@ -1,4 +1,5 @@
 import os
+
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
@@ -49,7 +50,7 @@ class FileEntry:
         """
         Calcula a indentação baseada na profundidade do caminho.
         """
-        base_indent = 20
+        base_indent = 10
         depth = len(os.path.dirname(path).split(os.sep))
         return base_indent * (depth + 1)
 
@@ -59,7 +60,7 @@ class FileEntry:
         """
         # Frame para o conteúdo
         content_frame = ttk.Frame(self.item_frame)
-        content_frame.pack(fill=X, side=LEFT, padx=(self.indent + 30, 0))
+        content_frame.pack(fill=X, side=LEFT, padx=(self.indent + 40, 0))
 
         # Checkbox com nome do arquivo
         checkbox = ttk.Checkbutton(

@@ -4,7 +4,7 @@ from typing import Optional, Callable
 
 import ttkbootstrap as ttk
 
-from src.core.selection_manager import logger, FileSelectionManager
+from src.core.selection_manager import logger, FileSelectionManager, SelectionState
 
 
 class TreeEntryBase:

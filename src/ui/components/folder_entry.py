@@ -60,7 +60,7 @@ class FolderEntry:
 
     def _calculate_indent(self):
         """Calcula a indentação baseada na profundidade do caminho"""
-        base_indent = 20
+        base_indent = 15
         depth = len(self.folder_path.split(os.sep))
         return base_indent * depth
 
