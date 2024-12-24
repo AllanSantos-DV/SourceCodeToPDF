@@ -6,5 +6,5 @@ SUPPORTED_EXTENSIONS = ('.java', '.py', '.js', '.html', '.css',
                         '.xml', 'fxml', '.json', '.txt', 'yaml', 'yml', 'sh', '.bat', '.cmd')
 PAGE_SIZE = letter
 DEFAULT_FONT_SIZE = 8
-IGNORED_FOLDERS = ('properties', 'target', 'META-INF', '.venv', '.config',
+IGNORED_FOLDERS = ('properties', 'target', 'META-INF', '.venv', '.config', '.pytest_cache',
                    '__pycache__', '.mvn', '.git', '.idea', '.vscode', 'node_modules')
