@@ -58,5 +58,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='src/assets/icon.ico'  # Adicione seu ícone aqui
+    icon='src/assets/pdf.ico'  # Adicione seu ícone aqui
 )
