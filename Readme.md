@@ -62,8 +62,7 @@ source-code-to-pdf/
 │   └── ui/                    # Interface gráfica da aplicação
 ├── tests/                     # Testes automatizados
 ├── requirements.txt           # Dependências do projeto
-├── README.md                  # Documentação principal do projeto (em inglês)
-├── LEIAME.md                  # Versão em português do README
+├── README.md                  # Documentação principal do projeto
 ├── CONTRIBUTING.md            # Guia para contribuir no projeto
 └── LICENSE                    # Licença do projeto
 ```
