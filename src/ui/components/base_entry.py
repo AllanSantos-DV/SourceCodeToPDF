@@ -7,6 +7,17 @@ import ttkbootstrap as ttk
 from src.core.selection_manager import logger, FileSelectionManager, SelectionState
 
 
+def _handle_error(message: str) -> None:
+    """
+    Trata erros de forma centralizada.
+
+    Args:
+        message: Mensagem de erro
+    """
+    logger.error(message)
+    messagebox.showerror("Erro", message)
+
+
 class TreeEntryBase:
     """
     Classe base para entradas na árvore de arquivos.
@@ -31,6 +42,7 @@ class TreeEntryBase:
             initial_state: Estado inicial de seleção
             indent_level: Nível de indentação na árvore
         """
+        self._custom_command = None
         self.path = path
         self.selection_manager = selection_manager
         self.indent_level = indent_level
@@ -88,7 +100,7 @@ class TreeEntryBase:
         checkbox_frame.pack(side="left", padx=(5, 0))
 
         # Criação do checkbox
-        checkbox = ttk.Checkbutton(
+        checkbox = ttk.CHECKBUTTON(
             checkbox_frame,
             text=text,
             variable=self.var,
@@ -102,7 +114,7 @@ class TreeEntryBase:
 
         # Adiciona tooltip se fornecido
         if tooltip:
-            ttk.ToolTip(checkbox, text=tooltip)
+            ttk.TOOLBUTTON(checkbox, text=tooltip)
 
         return checkbox
 
@@ -117,7 +129,7 @@ class TreeEntryBase:
                 self._custom_command()
 
         except Exception as e:
-            self._handle_error(f"Erro ao atualizar seleção: {str(e)}")
+            _handle_error(f"Erro ao atualizar seleção: {str(e)}")
 
     def update_state(self, state: 'SelectionState') -> None:
         """
@@ -137,18 +149,11 @@ class TreeEntryBase:
 
     def _on_mouse_enter(self, event) -> None:
         """Handler para evento de mouse enter"""
+        event.widget.configure(style="hover.TFrame")
         self.frame.configure(style="hover.TFrame")
 
     def _on_mouse_leave(self, event) -> None:
         """Handler para evento de mouse leave"""
+        event.widget.configure(style="normal.TFrame")
         self.frame.configure(style="normal.TFrame")
 
-    def _handle_error(self, message: str) -> None:
-        """
-        Trata erros de forma centralizada.
-
-        Args:
-            message: Mensagem de erro
-        """
-        logger.error(message)
-        messagebox.showerror("Erro", message)

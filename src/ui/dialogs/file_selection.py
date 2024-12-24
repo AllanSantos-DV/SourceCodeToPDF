@@ -1,9 +1,9 @@
-from tkinter import Toplevel
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
 from src.ui.components.file_entry import FileEntry
 from src.ui.components.folder_entry import FolderEntry
+
 
 class FileSelectionDialog:
     """
@@ -17,7 +17,7 @@ class FileSelectionDialog:
             parent: Janela pai
             project_path: Caminho base do projeto
         """
-        self.window = Toplevel(parent)
+        self.window = ttk.Toplevel(parent)
         self.window.title("Seleção de Arquivos")
         self.window.geometry("600x600")
         self.project_path = project_path

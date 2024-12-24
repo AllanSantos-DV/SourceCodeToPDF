@@ -1,7 +1,5 @@
 import os
 from tkinter import filedialog, messagebox
-from tkinter.simpledialog import askstring
-from tkinter.ttk import Label, Button
 
 import ttkbootstrap as ttk
 from ttkbootstrap import Toplevel
@@ -104,48 +102,35 @@ class MainWindow:
         dialog.populate_tree(self._organize_files(files))
         self.selected_files = dialog.get_selected_files()
 
-    # def generate_pdf(self):
-    #     """Gerencia a geração do PDF com os arquivos selecionados"""
-    #     if not self.selected_files:
-    #         messagebox.showwarning("Aviso", "Nenhum arquivo selecionado para geração do PDF.")
-    #         return
-    #
-    #     output_path = filedialog.asksaveasfilename(
-    #         defaultextension=".pdf",
-    #         filetypes=[("PDF files", "*.pdf")]
-    #     )
-    #
-    #     if not output_path:
-    #         messagebox.showwarning("Aviso", "Destino não selecionado")
-    #         return
-    #
-    #     pdf_gen = PDFGenerator()
-    #     pdf_gen.generate_pdf(
-    #         self.selected_files,
-    #         output_path,
-    #         self.update_progress
-    #     )
-    #
-    #     messagebox.showinfo("Sucesso", f"PDF gerado em {output_path}")
-    #     self.progress['value'] = 0
-    #     self.root.update_idletasks()
+    @staticmethod
+    def center_window(dialog, window_width, window_height):
+        """Centraliza a janela na tela."""
+        dialog.update_idletasks()  # Garante que as dimensões da janela sejam atualizadas
+        screen_width = dialog.winfo_screenwidth()
+        screen_height = dialog.winfo_screenheight()
+
+        position_x = (screen_width // 2) - (window_width // 2)
+        position_y = (screen_height // 2) - (window_height // 2)
+
+        dialog.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
 
     def show_pdf_format_dialog(self):
         """Exibe um diálogo para o usuário selecionar o formato do PDF."""
         dialog = Toplevel(self.root)
         dialog.title("Escolher Formato do PDF")
-        dialog.geometry("300x150")
         dialog.resizable(False, False)
         dialog.grab_set()
+        MainWindow.center_window(dialog, 300, 200)
 
-        Label(dialog, text="Escolha o formato do PDF:", font=("Helvetica", 12)).pack(pady=10)
+        ttk.Label(dialog, text="Escolha o formato do PDF:", font=("Helvetica", 12)).pack(pady=10)
 
         def select_format(format_option):
             dialog.destroy()
             self._generate_pdf_with_format(format_option)
 
-        Button(dialog, text="Texto Simples", command=lambda: select_format("texto_simples"), width=15).pack(pady=5)
-        Button(dialog, text="Texto Indentado", command=lambda: select_format("texto_indentado"), width=15).pack(pady=5)
+        ttk.Button(dialog, text="Texto Simples", command=lambda: select_format("texto_simples"), width=15).pack(pady=5)
+        ttk.Button(dialog, text="Texto Indentado", command=lambda: select_format("texto_indentado"), width=15).pack(
+            pady=5)
 
     def _generate_pdf_with_format(self, format_option):
         """Gera o PDF baseado no formato selecionado."""

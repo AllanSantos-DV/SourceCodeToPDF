@@ -4,6 +4,15 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
 
+def _calculate_indent(path):
+    """
+    Calcula a indentação baseada na profundidade do caminho.
+    """
+    base_indent = 10
+    depth = len(os.path.dirname(path).split(os.sep))
+    return base_indent * (depth + 1)
+
+
 class FileEntry:
     """
     Classe que representa um arquivo na árvore de seleção.
@@ -42,17 +51,9 @@ class FileEntry:
         self.file_vars[file_path] = self.var
 
         # Calcula a indentação baseada na profundidade do caminho
-        self.indent = self._calculate_indent(file_path)
+        self.indent = _calculate_indent(file_path)
 
         self._create_file_entry(file_name)
-
-    def _calculate_indent(self, path):
-        """
-        Calcula a indentação baseada na profundidade do caminho.
-        """
-        base_indent = 10
-        depth = len(os.path.dirname(path).split(os.sep))
-        return base_indent * (depth + 1)
 
     def _create_file_entry(self, file_name):
         """
