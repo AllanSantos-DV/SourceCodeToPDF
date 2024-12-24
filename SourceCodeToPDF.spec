@@ -15,6 +15,10 @@ a = Analysis(
     binaries=[],
     datas=added_files,
     hiddenimports=[
+        'tkinter',
+        'tkinter.filedialog',
+        'tkinter.messagebox',
+        'tkinter.ttk',
         'ttkbootstrap',
         'pdfkit',
         'pygments',
@@ -22,6 +26,18 @@ a = Analysis(
         'pygments.lexers',
         'pygments.formatters',
         'pygments.styles',
+        'core',
+        'ui',
+        'pdf',
+        'config',
+        'ui.main_window',
+        'ui.components',
+        'ui.dialogs',
+        'core.file_handler',
+        'core.file_manager',
+        'core.selection_manager',
+        'pdf.generator',
+        'config.settings'
     ],
     hookspath=[],
     hooksconfig={},
@@ -53,10 +69,10 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,  # False para aplicação sem console
+    console=False, # Altere para True se deseja que a aplicação seja executada em modo console
     disable_windowed_traceback=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='src/assets/pdf.ico'  # Adicione seu ícone aqui
+    icon='src/assets/pdf.ico'  # Certifique-se que o ícone existe neste caminho
 )
